@@ -25,14 +25,4 @@ class UrlDecodeExtension extends \Twig_Extension
     {
         return urldecode($url);
     }
-
-    /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
-     */
-    public function getName(): string
-    {
-        return 'url_decode_extension';
-    }
 }

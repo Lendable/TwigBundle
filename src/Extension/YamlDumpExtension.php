@@ -30,14 +30,4 @@ class YamlDumpExtension extends \Twig_Extension
 
         return $dumper->dump($data, $level);
     }
-
-    /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
-     */
-    public function getName(): string
-    {
-        return 'yaml_dump_extension';
-    }
 }
