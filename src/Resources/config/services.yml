@@ -6,15 +6,18 @@ parameters:
 
 services:
     alpha_twig.loader.database:
+        public: true
         class: "%alpha_twig.loader.database.class%"
         arguments:
             - "@doctrine.orm.default_entity_manager"
             - "%alpha_twig.entity.template.class%"
 
     alpha_twig.loader.string:
+        public: true
         class: "%alpha_twig.loader.string.class%"
 
     alpha_twig.admin.template:
+        public: true
         class: "%alpha_twig.admin.template.class%"
         tags:
             - { name: sonata.admin, manager_type: orm, audit: "false",  group: "Content", label: "Template" }
@@ -26,10 +29,12 @@ services:
             - [ setTranslationDomain, [AlphaTwigBundle]]
 
     alpha.twig.extension.url_decode:
+        public: true
         class: Alpha\TwigBundle\Extension\UrlDecodeExtension
         tags:
             -  { name: twig.extension }
     alpha.twig.extension.yaml_dump:
+        public: true
         class: Alpha\TwigBundle\Extension\YamlDumpExtension
         tags:
             -  { name: twig.extension }
