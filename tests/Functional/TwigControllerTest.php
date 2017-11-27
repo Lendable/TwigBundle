@@ -1,13 +1,14 @@
 <?php
 
-namespace Alpha\TwigBundle\Tests\Controller;
+namespace Alpha\TwigBundle\Tests\Functional;
 
+use Alpha\TwigBundle\AlphaTwigBundle;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Alpha\TwigBundle\Entity\Template;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Alpha\TwigBundle\Helper\DatabaseHelper;
 
-class TwigTest extends WebTestCase
+class TwigControllerTest extends WebTestCase
 {
     private $em;
 
@@ -15,7 +16,7 @@ class TwigTest extends WebTestCase
     {
         self::createClient([
             'environment' => 'test',
-            'debug' => true
+            'debug' => true,
         ]);
 
         $this->em = self::$kernel->getContainer()->get('doctrine.orm.entity_manager');
