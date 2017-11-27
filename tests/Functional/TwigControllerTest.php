@@ -14,92 +14,12 @@ class TwigControllerTest extends WebTestCase
 
     public function setUp()
     {
-        $container = new ContainerBuilder(
-            new ParameterBag(
-                [
-                    'kernel.debug' => true,
-                    'kernel.name' => 'tests',
-                    'kernel.bundles' => [
-                        'AlphaTwigBundle' => AlphaTwigBundle::class,
-                    ],
-                    'kernel.cache_dir' => sys_get_temp_dir().'/lendable-twig-bundle-test',
-                    'kernel.environment' => 'test',
-                    'kernel.root_dir' => __DIR__.'/../src',
-                ]
-            )
-        );
+        self::createClient([
+            'environment' => 'test',
+            'debug' => true,
+        ]);
 
-        $doctrineExtension = new DoctrineExtension();
-        $container->registerExtension($doctrineExtension);
-
-        $doctrineExtension->load(
-            [
-                [
-                    'dbal' => [
-                        'connections' => [
-                            'default' => [
-                                'driver' => 'pdo_sqlite',
-                                'charset' => 'UTF8',
-                                'memory' => true,
-                            ],
-                        ],
-                    ],
-                    'orm' => [
-                        'default_entity_manager' => 'default',
-                        'entity_managers' => [
-                            'default' => [
-                                'mappings' => [
-                                    'FooBundle' => [
-                                        'type' => 'yml',
-                                        'dir' => __DIR__.'/../../src/Entity/',
-                                        'prefix' => 'Alpha\TwigBundle\Entity',
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-            $container
-        );
-
-        $doctrineExtensionsExtension = new LendableDoctrineExtensionsExtension();
-        $container->registerExtension($doctrineExtensionsExtension);
-
-        $doctrineExtensionsExtension->load(
-            [
-                [
-                    'repositories' => [
-                        CustomRepositoryWithCustomArgs::class => [
-                            'entity' => WithCustomRepository::class,
-                            'managers' => ['default'],
-                            'args' => [
-                                'foo',
-                                '%custom_parameter%',
-                                '@custom_service',
-                                [
-                                    'key1' => 'bar',
-                                    'key2' => '%custom_parameter%',
-                                    'key3' => '@custom_service',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-            $container
-        );
-
-        $container->getCompilerPassConfig()->setBeforeOptimizationPasses([new RepositoryServicesCompilerPass()]);
-
-        $container->setParameter('custom_parameter', 'custom_parameter_value');
-        $container->setDefinition('custom_service', new Definition(CustomService::class));
-
-        $container->compile();
-
-        return $container;
-
-        $this->em = $container->get('doctrine.orm.entity_manager');
+        $this->em = self::$kernel->getContainer()->get('doctrine.orm.entity_manager');
 
         $loader = require self::$kernel->getContainer()->getParameter('kernel.root_dir') . '/../vendor/autoload.php';
 
