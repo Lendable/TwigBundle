@@ -7,10 +7,10 @@ class UrlDecodeExtension extends \Twig_Extension
     /**
      * {@inheritdoc}
      */
-    public function getFilters()
+    public function getFilters(): array
     {
         return array(
-            'url_decode' => new \Twig_Filter_Method($this, 'urlDecode')
+            'url_decode' => new \Twig_SimpleFilter($this, 'urlDecode')
         );
     }
 
@@ -21,18 +21,8 @@ class UrlDecodeExtension extends \Twig_Extension
      *
      * @return string The decoded URL
      */
-    public function urlDecode($url)
+    public function urlDecode(string $url): string
     {
         return urldecode($url);
-    }
-
-    /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
-     */
-    public function getName()
-    {
-        return 'url_decode_extension';
     }
 }
