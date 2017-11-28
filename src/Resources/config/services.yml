@@ -1,6 +1,6 @@
 parameters:
     alpha_twig.loader.database.class: Alpha\TwigBundle\Loader\DatabaseTwigLoader
-    alpha_twig.loader.string.class: Twig_Loader_String
+    alpha_twig.loader.string.class: Twig_Loader_Array
     alpha_twig.admin.template.class: Alpha\TwigBundle\Admin\TemplateAdmin
     alpha_twig.entity.template.class: Alpha\TwigBundle\Entity\Template
 
