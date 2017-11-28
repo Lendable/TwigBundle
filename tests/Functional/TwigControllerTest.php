@@ -93,16 +93,4 @@ class TwigControllerTest extends WebTestCase
 
         $this->assertSame('Hello File.', $output);
     }
-
-    /**
-     * @group database
-     */
-    public function testStringGetsParsed()
-    {
-        /** @var \Twig_Environment $twig */
-        $twig = self::$kernel->getContainer()->get('twig');
-        $output = $twig->render('{{ name }} says hi!', ['name' => 'String']);
-
-        $this->assertSame('String says hi!', $output);
-    }
 }
