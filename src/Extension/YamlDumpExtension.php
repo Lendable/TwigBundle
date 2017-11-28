@@ -12,7 +12,7 @@ class YamlDumpExtension extends \Twig_Extension
     public function getFilters(): array
     {
         return [
-            'yaml_dump' => new \Twig_SimpleFilter($this, 'yamlDump')
+            new \Twig_SimpleFilter('yaml_dump', [$this, 'yamlDump']),
         ];
     }
 

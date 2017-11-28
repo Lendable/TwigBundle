@@ -9,9 +9,9 @@ class UrlDecodeExtension extends \Twig_Extension
      */
     public function getFilters(): array
     {
-        return array(
-            'url_decode' => new \Twig_SimpleFilter($this, 'urlDecode')
-        );
+        return [
+            new \Twig_SimpleFilter('url_decode', [$this, 'urlDecode']),
+        ];
     }
 
     /**
