@@ -1,3 +1,5 @@
+[![Build Status](https://api.travis-ci.org/Lendable/TwigBundle.svg)](https://api.travis-ci.org/Lendable/TwigBundle.svg)
+
 TwigBundle
 ==========
 
