@@ -58,6 +58,7 @@ class DatabaseHelper
         $config->registerMigrationsFromDirectory($config->getMigrationsDirectory());
 
         $migration = new Migration($config);
+
         try {
             $migration->migrate();
         } catch (Exception $e) {

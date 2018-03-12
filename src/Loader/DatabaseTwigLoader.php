@@ -47,7 +47,7 @@ class DatabaseTwigLoader implements Twig_LoaderInterface
             $result = $this->em
                 ->getRepository($this->entity)
                 ->createQueryBuilder('t')
-                ->select('t.' . $column)
+                ->select('t.'.$column)
                 ->where('t.name = :name')
                 ->setMaxResults(1)
                 ->getQuery()

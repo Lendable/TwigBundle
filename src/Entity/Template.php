@@ -8,13 +8,13 @@ use DateTime;
 /**
  * Template
  *
- * @ORM\MappedSuperclass()
- * @ORM\HasLifecycleCallbacks()
+ * @ORM\MappedSuperclass
+ * @ORM\HasLifecycleCallbacks
  */
 class Template
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -53,7 +53,7 @@ class Template
     /**
      * Get id
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {

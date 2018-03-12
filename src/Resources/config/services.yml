@@ -27,9 +27,9 @@ services:
         public: true
         class: Alpha\TwigBundle\Extension\UrlDecodeExtension
         tags:
-            -  { name: twig.extension }
+            - { name: twig.extension }
     alpha.twig.extension.yaml_dump:
         public: true
         class: Alpha\TwigBundle\Extension\YamlDumpExtension
         tags:
-            -  { name: twig.extension }
+            - { name: twig.extension }

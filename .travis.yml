@@ -11,13 +11,13 @@ matrix:
     - php: 7.0
       env: SYMFONY_VERSION=2.7.*
     - php: 7.0
-      env: SYMFONY_VERSION=3.3.*
+      env: SYMFONY_VERSION=3.4.*
     - php: 7.0
       env: DEPENDENCIES=beta
     - php: 7.1
       env: SYMFONY_VERSION=2.7.*
     - php: 7.1
-      env: SYMFONY_VERSION=3.3.*
+      env: SYMFONY_VERSION=3.4.*
     - php: 7.1
       env: SYMFONY_VERSION=3.4.*
     - php: 7.1
@@ -27,7 +27,7 @@ matrix:
     - php: 7.2
       env: SYMFONY_VERSION=2.7.*
     - php: 7.2
-      env: SYMFONY_VERSION=3.3.*
+      env: SYMFONY_VERSION=3.4.*
     - php: 7.2
       env: SYMFONY_VERSION=3.4.*
     - php: 7.2
@@ -37,7 +37,7 @@ matrix:
     - php: nightly
       env: SYMFONY_VERSION=2.7.*
     - php: nightly
-      env: SYMFONY_VERSION=3.3.*
+      env: SYMFONY_VERSION=3.4.*
     - php: nightly
       env: SYMFONY_VERSION=3.4.*
     - php: nightly
@@ -62,4 +62,5 @@ install:
   - if [ "$deps" = "low" ]; then composer --prefer-lowest --prefer-stable update; fi;
 
 script:
-  - vendor/jakub-onderka/php-parallel-lint/parallel-lint --exclude vendor .
+  - composer validate-files
+  - composer code-style
