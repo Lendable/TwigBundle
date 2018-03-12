@@ -21,14 +21,14 @@ class TwigControllerTest extends WebTestCase
 
         $this->em = self::$kernel->getContainer()->get('doctrine.orm.entity_manager');
 
-        $loader = require self::$kernel->getContainer()->getParameter('kernel.root_dir') . '/../vendor/autoload.php';
+        $loader = require self::$kernel->getContainer()->getParameter('kernel.root_dir').'/../vendor/autoload.php';
 
-        AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
+        AnnotationRegistry::registerLoader([$loader, 'loadClass']);
 
         $database = new DatabaseHelper(
             self::$kernel->getContainer()->get('database_connection'),
             self::$kernel->getContainer()->get('doctrine.orm.entity_manager'),
-            self::$kernel->getContainer()->getParameter('kernel.root_dir') . '/DoctrineMigrations'
+            self::$kernel->getContainer()->getParameter('kernel.root_dir').'/DoctrineMigrations'
         );
         $database->cleanDatabase();
     }
