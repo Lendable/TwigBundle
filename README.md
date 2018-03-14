@@ -37,4 +37,4 @@ You can use the provided [`Template`](https://github.com/Lendable/TwigBundle/blo
 
 License
 =======
-MIT
+[MIT](https://opensource.org/licenses/MIT)
