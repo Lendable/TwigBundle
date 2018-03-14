@@ -57,6 +57,7 @@ matrix:
   allow_failures:
     - php: nightly
     - env: DEPENDENCIES=beta
+    - env: DEPENDENCIES=low
 
 before_install:
   - composer self-update
@@ -66,7 +67,7 @@ before_install:
   - mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{,.disabled} || echo "xdebug not available"
 
 install:
-  - if [ "$DEPENDENCIES" = "low" ]; then composer install --prefer-lowest --prefer-stable; else composer install; fi;
+  - if [ "$DEPENDENCIES" = "low" ]; then travis_retry composer update --prefer-lowest --prefer-stable; else composer install; fi;
 
 script:
   - composer validate-files
