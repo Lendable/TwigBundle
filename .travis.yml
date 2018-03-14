@@ -5,6 +5,10 @@ sudo: false
 cache:
   directories:
     - $HOME/.composer/cache
+    
+env:
+  global:
+    - DEPENDENCIES=no
 
 matrix:
   include:
@@ -14,6 +18,8 @@ matrix:
       env: SYMFONY_VERSION=3.4.*
     - php: 7.0
       env: DEPENDENCIES=beta
+    - php: 7.0
+      env: DEPENDENCIES=low
     - php: 7.1
       env: SYMFONY_VERSION=2.7.*
     - php: 7.1
@@ -24,6 +30,8 @@ matrix:
       env: SYMFONY_VERSION=4.0.*
     - php: 7.1
       env: DEPENDENCIES=beta
+    - php: 7.1
+      env: DEPENDENCIES=low
     - php: 7.2
       env: SYMFONY_VERSION=2.7.*
     - php: 7.2
@@ -34,6 +42,8 @@ matrix:
       env: SYMFONY_VERSION=4.0.*
     - php: 7.2
       env: DEPENDENCIES=beta
+    - php: 7.2
+      env: DEPENDENCIES=low
     - php: nightly
       env: SYMFONY_VERSION=2.7.*
     - php: nightly
@@ -48,19 +58,15 @@ matrix:
     - php: nightly
     - env: DEPENDENCIES=beta
 
-env:
-  global:
-    - deps=no
-
 before_install:
   - composer self-update
   # Set composer minimum-stability configuration filter to beta versions
   - if [ "$DEPENDENCIES" = "beta" ]; then perl -pi -e 's/^}$/,"minimum-stability":"beta"}/' composer.json; fi;
+  # Disable xdebug, there is no use of it being enabled
   - mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{,.disabled} || echo "xdebug not available"
 
 install:
-  - if [ "$deps" = "no" ]; then composer update; fi;
-  - if [ "$deps" = "low" ]; then composer --prefer-lowest --prefer-stable update; fi;
+  - if [ "$DEPENDENCIES" = "low" ]; then composer install --prefer-lowest --prefer-stable; else composer install; fi;
 
 script:
   - composer validate-files
