@@ -15,15 +15,19 @@ matrix:
     - php: 7.0
       env: SYMFONY_VERSION=2.7.*
     - php: 7.0
+      env: SYMFONY_VERSION=2.8.*
+    - php: 7.0
+      env: SYMFONY_VERSION=3.3.*
+    - php: 7.0
       env: SYMFONY_VERSION=3.4.*
     - php: 7.0
       env: DEPENDENCIES=beta
     - php: 7.0
       env: DEPENDENCIES=low
     - php: 7.1
-      env: SYMFONY_VERSION=2.7.*
+      env: SYMFONY_VERSION=2.8.*
     - php: 7.1
-      env: SYMFONY_VERSION=3.4.*
+      env: SYMFONY_VERSION=3.3.*
     - php: 7.1
       env: SYMFONY_VERSION=3.4.*
     - php: 7.1
@@ -33,9 +37,9 @@ matrix:
     - php: 7.1
       env: DEPENDENCIES=low
     - php: 7.2
-      env: SYMFONY_VERSION=2.7.*
+      env: SYMFONY_VERSION=2.8.*
     - php: 7.2
-      env: SYMFONY_VERSION=3.4.*
+      env: SYMFONY_VERSION=3.3.*
     - php: 7.2
       env: SYMFONY_VERSION=3.4.*
     - php: 7.2
@@ -45,9 +49,9 @@ matrix:
     - php: 7.2
       env: DEPENDENCIES=low
     - php: nightly
-      env: SYMFONY_VERSION=2.7.*
+      env: SYMFONY_VERSION=2.8.*
     - php: nightly
-      env: SYMFONY_VERSION=3.4.*
+      env: SYMFONY_VERSION=3.3.*
     - php: nightly
       env: SYMFONY_VERSION=3.4.*
     - php: nightly
@@ -65,9 +69,14 @@ before_install:
   - if [ "$DEPENDENCIES" = "beta" ]; then perl -pi -e 's/^}$/,"minimum-stability":"beta"}/' composer.json; fi;
   # Disable xdebug, there is no use of it being enabled
   - mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{,.disabled} || echo "xdebug not available"
+  # Prevent Travis throwing an out of memory error
+  - echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  # Test if we have a token for github as the project easily hits the 60 rph limit
+  - if [ -n "$GH_TOKEN" ]; then composer config github-oauth.github.com ${GH_TOKEN}; fi;
 
 install:
-  - if [ "$DEPENDENCIES" = "low" ]; then travis_retry composer update --prefer-lowest --prefer-stable; else composer install; fi;
+  - if [ "$DEPENDENCIES" = "no" ]; then travis_retry composer update; fi;
+  - if [ "$DEPENDENCIES" = "low" ]; then travis_retry composer --prefer-lowest --prefer-stable update; fi;
 
 script:
   - composer validate-files
