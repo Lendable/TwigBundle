@@ -1,14 +1,18 @@
 <?php
 
-$finder = \PhpCsFixer\Finder::create()
+declare(strict_types=1);
+
+$finder = PhpCsFixer\Finder::create()
     ->in(__DIR__.'/src')
     ->in(__DIR__.'/tests');
 
-return \PhpCsFixer\Config::create()
+return PhpCsFixer\Config::create()
     ->setRules(
         [
             '@PSR2' => true,
             '@DoctrineAnnotation' => true,
+            '@PHP56Migration' => true,
+            '@PHP70Migration' => true,
             'array_syntax' => ['syntax' => 'short'],
             'binary_operator_spaces' => true,
             'blank_line_after_opening_tag' => true,
@@ -19,8 +23,13 @@ return \PhpCsFixer\Config::create()
             'combine_consecutive_unsets' => true,
             'concat_space' => ['spacing' => 'none'],
             'declare_equal_normalize' => ['space' => 'none'],
+            'dir_constant' => true,
+            'ereg_to_preg' => true,
+            'final_internal_class' => false,
+            'function_to_constant' => true,
             'function_typehint_space' => true,
             'include' => true,
+            'is_null' => true,
             'linebreak_after_opening_tag' => true,
             'list_syntax' => ['syntax' => 'long'],
             'lowercase_cast' => true,
@@ -29,8 +38,10 @@ return \PhpCsFixer\Config::create()
             'method_chaining_indentation' => true,
             'method_separation' => true,
             'multiline_whitespace_before_semicolons' => ['strategy' => 'no_multi_line'],
+            'modernize_types_casting' => true,
             'native_function_casing' => true,
             'new_with_braces' => true,
+            'no_alias_functions' => true,
             'no_blank_lines_after_class_opening' => true,
             'no_blank_lines_after_phpdoc' => true,
             'no_empty_comment' => true,
@@ -72,6 +83,7 @@ return \PhpCsFixer\Config::create()
             'phpdoc_var_without_name' => true,
             'increment_style' => ['style' => 'post'],
             'return_type_declaration' => true,
+            'self_accessor' => true,
             'semicolon_after_instruction' => true,
             'short_scalar_cast' => true,
             'silenced_deprecation_error' => false,
@@ -80,6 +92,7 @@ return \PhpCsFixer\Config::create()
             'single_quote' => true,
             'space_after_semicolon' => true,
             'standardize_not_equals' => true,
+            'static_lambda' => false,
             'strict_comparison' => false,
             'strict_param' => false,
             'ternary_operator_spaces' => true,
@@ -89,8 +102,8 @@ return \PhpCsFixer\Config::create()
             'whitespace_after_comma_in_array' => true,
         ]
     )
-    ->setRiskyAllowed(false)
-    ->setUsingCache(false)
+    ->setRiskyAllowed(true)
+    ->setUsingCache(true)
     ->setIndent("    ")
     ->setLineEnding("\n")
     ->setFinder($finder);
