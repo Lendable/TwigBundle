@@ -2,7 +2,6 @@
 
 namespace Alpha\TwigBundle\Tests\Functional;
 
-use Alpha\TwigBundle\AlphaTwigBundle;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Alpha\TwigBundle\Entity\Template;
 use Doctrine\Common\Annotations\AnnotationRegistry;

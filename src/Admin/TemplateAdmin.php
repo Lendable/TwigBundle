@@ -2,7 +2,6 @@
 
 namespace Alpha\TwigBundle\Admin;
 
-use Alpha\TwigBundle\Entity\Template;
 use Sonata\AdminBundle\Admin\Admin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;

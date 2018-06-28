@@ -8,7 +8,7 @@ Symfony bundle that allows Twig templates to be loaded from database store.
 Install
 =======
 
-`composer require lendable/twig-bundle ~1.0`
+`composer require lendable/twig-bundle`
 
 
 Require the bundle in your AppKernel.php
