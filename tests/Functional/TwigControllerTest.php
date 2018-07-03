@@ -1,15 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alpha\TwigBundle\Tests\Functional;
 
-use Doctrine\DBAL\Connection;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Alpha\TwigBundle\Entity\Template;
-use Doctrine\Common\Annotations\AnnotationRegistry;
-use Alpha\TwigBundle\Helper\DatabaseHelper;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class TwigControllerTest extends TestCase
@@ -27,15 +25,44 @@ class TwigControllerTest extends TestCase
     /**
      * @var EntityManagerInterface
      */
-    private $em;
+    private $entityManager;
 
     protected function setUp()
     {
-        $this->kernel = new \AppKernel('test', true);
+        $this->kernel = new \AppKernel('test', false);
         $this->kernel->boot();
-        
-        $this->em = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
+
+        $this->entityManager = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
+
         $this->twig = $this->kernel->getContainer()->get('twig');
+
+        $application = new \Symfony\Bundle\FrameworkBundle\Console\Application($this->kernel);
+        $application->setAutoExit(false);
+
+        $application->add(new \Doctrine\Bundle\DoctrineBundle\Command\DropDatabaseDoctrineCommand());
+        $application->run(new \Symfony\Component\Console\Input\ArrayInput([
+            'command' => 'doctrine:database:drop',
+            '--force' => true,
+        ]), new NullOutput());
+
+        $application->add(new \Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand());
+        $application->run(new \Symfony\Component\Console\Input\ArrayInput([
+            'command' => 'doctrine:database:create',
+        ]), new NullOutput());
+
+        $application->add(new \Doctrine\Bundle\DoctrineBundle\Command\Proxy\RunSqlDoctrineCommand());
+        $application->run(new \Symfony\Component\Console\Input\ArrayInput([
+            'command' => 'doctrine:query:sql',
+            'sql' => <<<SQL
+        CREATE TABLE `template` (
+          `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+          `name` varchar(255) NOT NULL,
+          `source` longtext NOT NULL,
+          `services` longtext,
+          `lastModified` datetime NOT NULL
+        )
+SQL
+        ]), new NullOutput());
     }
 
     protected function tearDown()
@@ -54,8 +81,8 @@ class TwigControllerTest extends TestCase
         $template->setSource('Hello {{ name }}.');
         $template->setLastModified(new \DateTime());
 
-        $this->em->persist($template);
-        $this->em->flush();
+        $this->entityManager->persist($template);
+        $this->entityManager->flush();
 
         $this->assertSame('Hello Database.', $this->twig->render('hello.txt.twig', ['name' => 'Database']));
     }
@@ -91,10 +118,10 @@ class TwigControllerTest extends TestCase
         $template = new Template();
         $template->setName('AlphaTwigBundle:Test:hello.txt.twig');
         $template->setSource('Database says hi to {{ name }}.');
-        $template->setLastModified(new \DateTime());
+        $template->setLastModified(new \DateTimeImmutable());
 
-        $this->em->persist($template);
-        $this->em->flush();
+        $this->entityManager->persist($template);
+        $this->entityManager->flush();
 
         $output = $this->twig->render('AlphaTwigBundle:Test:hello.txt.twig', ['name' => 'File']);
 

@@ -1,0 +1,27 @@
+parameters:
+  kernel.secret: 'secret'
+
+doctrine:
+  dbal:
+    default_connection: 'default'
+    connections:
+      default:
+        driver: 'pdo_sqlite'
+        charset: 'UTF8'
+        dbname: 'test-database'
+        memory: true
+  orm:
+    auto_generate_proxy_classes: true
+    default_entity_manager: 'default'
+    entity_managers:
+      default:
+        connection: 'default'
+        metadata_cache_driver: 'array'
+        auto_mapping: true
+        mappings:
+          AlphaTwigBundle:
+            type: 'yml'
+
+framework:
+  templating:
+    engines: ['twig']

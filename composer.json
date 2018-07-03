@@ -27,13 +27,15 @@
       "Alpha\\TwigBundle\\Tests\\": "tests/"
     },
     "classmap": [
-      "tests/app/AppKernel.php"
+      "tests/Fixtures/Bundle/app/AppKernel.php"
     ]
   },
 
   "require": {
     "php": "^7.0",
+    "ext-PDO": "*",
     "doctrine/doctrine-bundle": "*",
+    "doctrine/migrations": "*",
     "doctrine/orm": "*",
     "sonata-project/admin-bundle": "^3.0",
     "symfony/framework-bundle": "^2.7|^3.0|^4.0",
