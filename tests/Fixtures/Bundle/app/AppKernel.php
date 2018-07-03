@@ -38,6 +38,13 @@ class AppKernel extends Kernel
 
     private function getVarDir(): string
     {
-        return $this->getProjectDir().'/var';
+        if (method_exists($this, 'getProjectDir')) {
+            return $this->getProjectDir().'/var';
+        }
+        if (method_exists($this, 'getRootDir')) {
+            return $this->getRootDir().'/../../../../var';
+        }
+
+        throw new \RuntimeException('Cannot work out where is the project specific var directory');
     }
 }
