@@ -49,12 +49,12 @@ class TemplateAdmin extends AbstractAdmin
     public function prePersist($object)
     {
         assert($object instanceof Template);
-        $object->setLastModifiedDate();
+        $object->setLastModifiedToCurrentMoment();
     }
 
     public function preUpdate($object)
     {
         assert($object instanceof Template);
-        $object->setLastModifiedDate();
+        $object->setLastModifiedToCurrentMoment();
     }
 }
