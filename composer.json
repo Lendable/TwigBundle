@@ -53,7 +53,9 @@
 
   "scripts": {
     "validate-files": [
-      "bin/parallel-lint --exclude vendor --exclude bin ."
+      "bin/parallel-lint --exclude vendor --exclude bin .",
+      "php bin/console lint:yaml src/ --env=test --no-debug",
+      "php bin/console lint:yaml tests/ --env=test --no-debug"
     ],
     "check-code-style": [
       "bin/php-cs-fixer fix --config='./.php_cs' --no-interaction --diff --dry-run -v"
