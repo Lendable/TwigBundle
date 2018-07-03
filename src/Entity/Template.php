@@ -1,118 +1,69 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alpha\TwigBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use DateTime;
-
-/**
- * Template
- *
- * @ORM\MappedSuperclass
- * @ORM\HasLifecycleCallbacks
- */
 class Template
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255)
      */
     protected $name;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="source", type="text")
      */
     protected $source;
 
     /**
      * @var array
-     *
-     * @ORM\Column(name="services", type="array", nullable=true)
      */
     protected $services;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="lastModified", type="datetime")
+     * @var \DateTimeInterface
      */
     protected $lastModified;
 
-    /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set name
-     *
-     * @param  string   $name
-     * @return Template
-     */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Set source
-     *
-     * @param  string   $source
-     * @return Template
-     */
-    public function setSource($source)
+    public function setSource(string $source): self
     {
         $this->source = $source;
 
         return $this;
     }
 
-    /**
-     * Get source
-     *
-     * @return string
-     */
-    public function getSource()
+    public function getSource(): string
     {
         return $this->source;
     }
 
     /**
-     * Set services
-     *
-     * @param  array    $services
-     * @return Template
+     * @param array|null $services
      */
-    public function setServices($services)
+    public function setServices($services): self
     {
         $this->services = $services;
 
@@ -120,48 +71,31 @@ class Template
     }
 
     /**
-     * Get services
-     *
-     * @return array
+     * @return array|null
      */
     public function getServices()
     {
         return $this->services;
     }
 
-    /**
-     * Set lastModified
-     *
-     * @param  \DateTime $lastModified
-     * @return Template
-     */
-    public function setLastModified(DateTime $lastModified)
+    public function setLastModified(\DateTimeInterface $lastModified): self
     {
         $this->lastModified = $lastModified;
 
         return $this;
     }
 
-    /**
-     * Get lastModified
-     *
-     * @return \DateTime
-     */
-    public function getLastModified()
+    public function getLastModified(): \DateTimeInterface
     {
         return $this->lastModified;
     }
 
-    /**
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
-     */
-    public function setLastModifiedDate()
+    public function setLastModifiedToCurrentMoment()
     {
-        $this->lastModified = new DateTime();
+        $this->lastModified = new \DateTimeImmutable();
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getName() ?: '';
     }
