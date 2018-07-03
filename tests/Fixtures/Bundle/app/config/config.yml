@@ -24,4 +24,4 @@ doctrine:
 
 framework:
   templating:
-    engines: ['twig']
+    engines: ['twig', 'php']
