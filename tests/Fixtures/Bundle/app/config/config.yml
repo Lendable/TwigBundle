@@ -23,5 +23,8 @@ doctrine:
             type: 'yml'
 
 framework:
+  router:
+    resource: ~
+    strict_requirements: ~
   templating:
-    engines: ['twig', 'php']
+    engines: ['twig']
