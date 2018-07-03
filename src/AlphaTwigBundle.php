@@ -22,11 +22,25 @@ class AlphaTwigBundle extends Bundle
 
     private function addRegisterMappingsPass(ContainerBuilder $container)
     {
-        $mappings = [
-            realpath(__DIR__.'/Resources/config/doctrine') => 'Alpha\TwigBundle\Entity',
-        ];
-        if (class_exists('Doctrine\Bundle\DoctrineBundle\DependencyInjection\Compiler\DoctrineOrmMappingsPass')) {
-            $container->addCompilerPass(DoctrineOrmMappingsPass::createYamlMappingDriver($mappings));
+        if (!$container->hasParameter('alpha_twig.entity.template.mapping_dir')) {
+            $mappingDir = realpath(__DIR__.'/Resources/config/doctrine');
+        } else {
+            $mappingDir = $container->getParameter('alpha_twig.entity.template.mapping_dir');
         }
+
+        if (!$container->hasParameter('alpha_twig.entity.template.class')) {
+            $mappingNamespace = 'Alpha\TwigBundle\Entity';
+        } else {
+            $namespaceParts = explode('\\', $container->getParameter('alpha_twig.entity.template.class'));
+            if (count($namespaceParts) > 1) {
+                array_pop($namespaceParts);
+            }
+            $mappingNamespace = count($namespaceParts) > 0 ? implode('\\', $namespaceParts) : '\\';
+        }
+
+        $mappings = [
+            $mappingDir => $mappingNamespace,
+        ];
+        $container->addCompilerPass(DoctrineOrmMappingsPass::createYamlMappingDriver($mappings));
     }
 }

@@ -32,12 +32,13 @@ class YourAppKernel extends \Symfony\Component\HttpKernel\Kernel
 }
 ```
     
-You can use the provided [`Template`](https://github.com/Lendable/TwigBundle/blob/master/src/Entity/Template.php) entity or use your own. Overwrite the bundle entity with setting a value for paramater `alpha_twig.entity.template.class`.
+You can use the provided [`Template`](https://github.com/Lendable/TwigBundle/blob/master/src/Entity/Template.php) entity or use your own. Overwrite the bundle entity with setting paramater values for your entity class  `alpha_twig.entity.template.class` and the directory containing its YAML mapping `alpha_twig.entity.template.mapping_dir`.
 
 ```yml
 // your-application/app/config/config.yml
 parameters:
     alpha_twig.entity.template.class: 'Alpha\TwigBundle\Entity\Template'
+    alpha_twig.entity.template.mapping_dir: 'src/Resources/config/doctrine'
 ```
 
 License
