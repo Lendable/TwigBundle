@@ -1,25 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alpha\TwigBundle\Helper;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Migrations\Configuration\Configuration;
 use Doctrine\DBAL\Migrations\Migration;
-use PDOException;
-use RuntimeException;
-use Exception;
 
 class DatabaseHelper
 {
     private $connection;
-    private $entityManager;
     private $migrationsDir;
 
-    public function __construct(Connection $connection, EntityManager $entityManager, $migrationsDir)
+    public function __construct(Connection $connection, string $migrationsDir)
     {
         $this->connection = $connection;
-        $this->entityManager = $entityManager;
         $this->migrationsDir = $migrationsDir;
     }
 
@@ -34,7 +30,7 @@ class DatabaseHelper
     {
         try {
             $this->connection->getSchemaManager()->createDatabase($this->connection->getDatabase());
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             // ignore exception, the database might not exist already
         }
     }
@@ -49,20 +45,19 @@ class DatabaseHelper
      */
     private function runMigrations()
     {
-        $this->connection->executeQuery(sprintf('USE %s', $this->connection->getDatabase()));
-
-        $config = new Configuration($this->connection);
-        $config->setMigrationsTableName('migration_versions');
-        $config->setMigrationsNamespace('Application\\Migrations');
-        $config->setMigrationsDirectory($this->migrationsDir);
-        $config->registerMigrationsFromDirectory($config->getMigrationsDirectory());
-
-        $migration = new Migration($config);
-
         try {
+            $this->connection->executeQuery(sprintf('USE %s', $this->connection->getDatabase()));
+
+            $config = new Configuration($this->connection);
+            $config->setMigrationsTableName('migration_versions');
+            $config->setMigrationsNamespace('Application\\Migrations');
+            $config->setMigrationsDirectory($this->migrationsDir);
+            $config->registerMigrationsFromDirectory($config->getMigrationsDirectory());
+
+            $migration = new Migration($config);
             $migration->migrate();
-        } catch (Exception $e) {
-            throw new RuntimeException(sprintf('Could not run the migrations. Error message: %s', $e->getMessage()));
+        } catch (\Exception $e) {
+            throw new \RuntimeException(sprintf('Could not run the migrations. Error message: %s', $e->getMessage()));
         }
     }
 }

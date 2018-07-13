@@ -1,2 +1,7 @@
+!/bin/console
+!/bin/console.php
+/bin
+/var
 /vendor
-/.idea
+.php_cs.cache
+composer.lock

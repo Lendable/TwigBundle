@@ -1,0 +1,23 @@
+Alpha\TwigBundle\Entity\Template:
+  type: mappedSuperclass
+  table: template
+  readOnly: true
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    name:
+      type: string
+      length: 255
+    source:
+      type: text
+    services:
+      type: array
+      nullable: true
+    lastModified:
+      type: datetime
+  lifecycleCallbacks:
+    prePersist: [ setLastModifiedToCurrentMoment ]
+    preUpdate: [ setLastModifiedToCurrentMoment ]

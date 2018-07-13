@@ -1,12 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alpha\TwigBundle\Extension;
 
 class UrlDecodeExtension extends \Twig_Extension
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getFilters(): array
     {
         return [
@@ -14,13 +13,6 @@ class UrlDecodeExtension extends \Twig_Extension
         ];
     }
 
-    /**
-     * URL Decode a string
-     *
-     * @param string $url
-     *
-     * @return string The decoded URL
-     */
     public function urlDecode(string $url): string
     {
         return urldecode($url);

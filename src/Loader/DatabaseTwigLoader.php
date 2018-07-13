@@ -1,38 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alpha\TwigBundle\Loader;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
-use Twig_LoaderInterface;
-use Twig_Error_Loader;
 
-class DatabaseTwigLoader implements Twig_LoaderInterface
+class DatabaseTwigLoader implements \Twig_LoaderInterface
 {
-    protected $em;
+    protected $entityManager;
     protected $entity;
 
-    public function __construct(EntityManagerInterface $em, $entity)
+    public function __construct(EntityManagerInterface $entityManager, string $entity)
     {
-        $this->em = $em;
+        $this->entityManager = $entityManager;
         $this->entity = $entity;
     }
 
-    public function getSource($name)
+    public function getSource($name): string
     {
-        if (false === $source = $this->getValue('source', $name)) {
-            throw new Twig_Error_Loader(sprintf('Template "%s" does not exist.', $name));
+        $source = $this->getValue('source', $name);
+        if (!is_string($source) || mb_strlen($source) < 1) {
+            throw new \Twig_Error_Loader(sprintf('Template "%s" does not exist.', $name));
         }
 
         return $source;
     }
 
-    public function getCacheKey($name)
+    public function getCacheKey($name): string
     {
         return $name;
     }
 
-    public function isFresh($name, $time)
+    public function isFresh($name, $time): bool
     {
         if (false === $lastModified = $this->getValue('lastModified', $name)) {
             return false;
@@ -41,22 +42,26 @@ class DatabaseTwigLoader implements Twig_LoaderInterface
         return strtotime($lastModified) <= $time;
     }
 
-    protected function getValue($column, $name)
+    /**
+     * @return string|null
+     */
+    private function getValue(string $column, string $templateName)
     {
+        $value = null;
+
         try {
-            $result = $this->em
+            $value = $this->entityManager
                 ->getRepository($this->entity)
                 ->createQueryBuilder('t')
                 ->select('t.'.$column)
                 ->where('t.name = :name')
                 ->setMaxResults(1)
                 ->getQuery()
-                ->setParameter('name', $name)
+                ->setParameter('name', $templateName)
                 ->getSingleScalarResult();
         } catch (NoResultException $e) {
-            $result = false;
         }
 
-        return $result;
+        return $value;
     }
 }
