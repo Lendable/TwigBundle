@@ -1,95 +1,129 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alpha\TwigBundle\Tests\Functional;
 
-use Alpha\TwigBundle\AlphaTwigBundle;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\TestCase;
 use Alpha\TwigBundle\Entity\Template;
-use Doctrine\Common\Annotations\AnnotationRegistry;
-use Alpha\TwigBundle\Helper\DatabaseHelper;
+use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\HttpKernel\KernelInterface;
 
-class TwigControllerTest extends WebTestCase
+class TwigControllerTest extends TestCase
 {
-    private $em;
+    /**
+     * @var KernelInterface
+     */
+    private $kernel;
 
-    public function setUp()
+    /**
+     * @var \Twig_Environment
+     */
+    private $twig;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    protected function setUp()
     {
-        self::createClient([
-            'environment' => 'test',
-            'debug' => true,
-        ]);
+        $this->kernel = new \AppKernel('test', false);
+        $this->kernel->boot();
 
-        $this->em = self::$kernel->getContainer()->get('doctrine.orm.entity_manager');
+        $this->entityManager = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
 
-        $loader = require self::$kernel->getContainer()->getParameter('kernel.root_dir').'/../vendor/autoload.php';
+        $this->twig = $this->kernel->getContainer()->get('twig');
 
-        AnnotationRegistry::registerLoader([$loader, 'loadClass']);
+        $application = new \Symfony\Bundle\FrameworkBundle\Console\Application($this->kernel);
+        $application->setAutoExit(false);
 
-        $database = new DatabaseHelper(
-            self::$kernel->getContainer()->get('database_connection'),
-            self::$kernel->getContainer()->get('doctrine.orm.entity_manager'),
-            self::$kernel->getContainer()->getParameter('kernel.root_dir').'/DoctrineMigrations'
-        );
-        $database->cleanDatabase();
+        $application->add(new \Doctrine\Bundle\DoctrineBundle\Command\DropDatabaseDoctrineCommand());
+        $application->run(new \Symfony\Component\Console\Input\ArrayInput([
+            'command' => 'doctrine:database:drop',
+            '--force' => true,
+        ]), new NullOutput());
+
+        $application->add(new \Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand());
+        $application->run(new \Symfony\Component\Console\Input\ArrayInput([
+            'command' => 'doctrine:database:create',
+        ]), new NullOutput());
+
+        $application->add(new \Doctrine\Bundle\DoctrineBundle\Command\Proxy\RunSqlDoctrineCommand());
+        $application->run(new \Symfony\Component\Console\Input\ArrayInput([
+            'command' => 'doctrine:query:sql',
+            'sql' => <<<SQL
+        CREATE TABLE `template` (
+          `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+          `name` varchar(255) NOT NULL,
+          `source` longtext NOT NULL,
+          `services` longtext,
+          `lastModified` datetime NOT NULL
+        )
+SQL
+        ]), new NullOutput());
+    }
+
+    protected function tearDown()
+    {
+        $this->kernel->shutdown();
     }
 
     /**
+     * @test
      * @group database
      */
-    public function testCompilingADatatabaseTemplateSucceedsIfItExists()
+    public function compiling_a_database_template_succeeds_if_it_exists()
     {
         $template = new Template();
         $template->setName('hello.txt.twig');
         $template->setSource('Hello {{ name }}.');
         $template->setLastModified(new \DateTime());
 
-        $this->em->persist($template);
-        $this->em->flush();
+        $this->entityManager->persist($template);
+        $this->entityManager->flush();
 
-        /** @var \Twig_Environment $twig */
-        $twig = self::$kernel->getContainer()->get('twig');
-        $this->assertSame('Hello Database.', $twig->render('hello.txt.twig', ['name' => 'Database']));
+        $this->assertSame('Hello Database.', $this->twig->render('hello.txt.twig', ['name' => 'Database']));
     }
 
     /**
-     * @expectedException Twig_Error_Loader
+     * @test
      * @group database
      */
-    public function testCompilingADatatabaseTemplateThrowsExceptionIfDoesNotExist()
+    public function compiling_a_database_template_throws_exception_if_it_does_not_exist()
     {
-        /** @var \Twig_Environment $twig */
-        $twig = self::$kernel->getContainer()->get('twig');
-        $twig->render('invalid.txt.twig', ['name' => 'World']);
+        $this->expectException(\Twig_Error_Loader::class);
+
+        $this->twig->render('invalid.txt.twig', ['name' => 'World']);
     }
 
     /**
+     * @test
      * @group database
      */
-    public function testCompilingAFileSucceeds()
+    public function compiling_a_file_succeeds()
     {
-        /** @var \Twig_Environment $twig */
-        $twig = self::$kernel->getContainer()->get('twig');
-        $output = $twig->render('AlphaTwigBundle:Test:hello.txt.twig', ['name' => 'File']);
+        $output = $this->twig->render('AlphaTwigBundle:Test:hello.txt.twig', ['name' => 'File']);
 
         $this->assertSame('Hello File.', $output);
     }
 
     /**
+     * @test
      * @group database
      */
-    public function testFileTakesPrecedenceOverDatabase()
+    public function file_takes_precedence_over_database()
     {
         $template = new Template();
         $template->setName('AlphaTwigBundle:Test:hello.txt.twig');
         $template->setSource('Database says hi to {{ name }}.');
-        $template->setLastModified(new \DateTime());
+        $template->setLastModified(new \DateTimeImmutable());
 
-        $this->em->persist($template);
-        $this->em->flush();
+        $this->entityManager->persist($template);
+        $this->entityManager->flush();
 
-        /** @var \Twig_Environment $twig */
-        $twig = self::$kernel->getContainer()->get('twig');
-        $output = $twig->render('AlphaTwigBundle:Test:hello.txt.twig', ['name' => 'File']);
+        $output = $this->twig->render('AlphaTwigBundle:Test:hello.txt.twig', ['name' => 'File']);
 
         $this->assertSame('Hello File.', $output);
     }

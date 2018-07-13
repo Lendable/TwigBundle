@@ -5,6 +5,7 @@
   "license": "MIT",
   "keywords": [
     "twig",
+    "database",
     "symfony",
     "bundle",
     "lendable"
@@ -15,6 +16,7 @@
       "email": "dev@lendable.co.uk"
     }
   ],
+
   "autoload": {
     "psr-4": {
       "Alpha\\TwigBundle\\": "src/"
@@ -23,33 +25,58 @@
   "autoload-dev": {
     "psr-4": {
       "Alpha\\TwigBundle\\Tests\\": "tests/"
-    }
+    },
+    "classmap": [
+      "tests/Fixtures/Bundle/app/AppKernel.php"
+    ]
   },
+
   "require": {
-    "php": ">=7.0",
-    "twig/twig": "~1.26|~2.0",
-    "symfony/symfony": "~2.7|~3.0|~4.0",
-    "symfony/framework-bundle": "~2.7|~3.0|~4.0",
-    "sonata-project/admin-bundle": "~3.0",
-    "symfony/twig-bundle": "~2.7|^3.0|^4.0",
+    "php": "^7.0",
+    "ext-PDO": "*",
     "doctrine/doctrine-bundle": "*",
-    "doctrine/orm": "*"
+    "doctrine/migrations": "*",
+    "doctrine/orm": "*",
+    "sonata-project/admin-bundle": "^3.0",
+    "symfony/framework-bundle": "^2.7|^3.0|^4.0",
+    "symfony/symfony": "^2.7|^3.0|^4.0",
+    "symfony/twig-bundle": "^2.7|^3.0|^4.0",
+    "twig/twig": "^1.26"
   },
   "require-dev": {
+    "friendsofphp/php-cs-fixer": "^2.12.1",
+    "jakub-onderka/php-parallel-lint": "^1.0",
     "phpunit/phpunit": "^6.0",
-    "roave/security-advisories": "dev-master",
-    "jakub-onderka/php-parallel-lint": "^0.9.2",
-    "friendsofphp/php-cs-fixer": "^2.10"
+    "php-coveralls/php-coveralls": "^2.1",
+    "sensiolabs/security-checker": "^4.1"
   },
+
   "scripts": {
     "validate-files": [
-      "vendor/bin/parallel-lint --exclude vendor ."
+      "bin/parallel-lint --exclude vendor --exclude bin .",
+      "php bin/console lint:yaml src/ --env=test --no-debug",
+      "php bin/console lint:yaml tests/ --env=test --no-debug"
     ],
-    "code-style": [
-      "vendor/bin/php-cs-fixer fix --config='./.php_cs' --show-progress=none --dry-run --no-interaction -v"
+    "check-code-style": [
+      "bin/php-cs-fixer fix --config='./.php_cs' --no-interaction --diff --dry-run -v"
     ],
-    "tests": [
-      "vendor/bin/phpunit"
+    "fix-code-style": [
+      "bin/php-cs-fixer fix --config='./.php_cs' --no-interaction --diff -v"
+    ],
+    "run-tests": [
+      "bin/phpunit"
+    ],
+    "run-tests-with-clover": [
+      "bin/phpunit --coverage-clover build/logs/clover.xml"
+    ],
+    "check-security": [
+      "bin/security-checker security:check"
     ]
-  }
+  },
+
+  "config": {
+    "bin-dir": "bin",
+    "sort-packages": true
+  },
+  "prefer-stable": true
 }

@@ -1,9 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alpha\TwigBundle\Exception;
 
-use RuntimeException;
-
-class ServiceNotFoundException extends RuntimeException
+class ServiceNotFoundException extends \RuntimeException
 {
 }
