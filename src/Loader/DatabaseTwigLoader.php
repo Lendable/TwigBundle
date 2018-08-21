@@ -6,8 +6,9 @@ namespace Alpha\TwigBundle\Loader;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
+use Twig\Source;
 
-class DatabaseTwigLoader implements \Twig_LoaderInterface
+class DatabaseTwigLoader implements \Twig_LoaderInterface, \Twig_SourceContextLoaderInterface
 {
     protected $entityManager;
     protected $entity;
@@ -18,24 +19,59 @@ class DatabaseTwigLoader implements \Twig_LoaderInterface
         $this->entity = $entity;
     }
 
-    public function getSource($name): string
-    {
-        $source = $this->getValue('source', $name);
-        if (!is_string($source) || mb_strlen($source) < 1) {
-            throw new \Twig_Error_Loader(sprintf('Template "%s" does not exist.', $name));
-        }
-
-        return $source;
-    }
-
     public function getCacheKey($name): string
     {
         return $name;
     }
 
-    public function isFresh($name, $time): bool
+    public function exists($templateName): bool
     {
-        if (false === $lastModified = $this->getValue('lastModified', $name)) {
+        $template = $this->findTemplate($templateName);
+
+        return $template instanceof $this->entity;
+    }
+
+    /**
+     * @return null|object
+     */
+    private function findTemplate(string $templateName)
+    {
+        try {
+            return $this->entityManager
+                ->getRepository($this->entity)
+                ->createQueryBuilder('t')
+                ->select('t')
+                ->where('t.name = :name')
+                ->setMaxResults(1)
+                ->getQuery()
+                ->setParameter('name', $templateName)
+                ->getSingleResult();
+        } catch (NoResultException $e) {
+            return null;
+        }
+    }
+
+    public function getSourceContext($templateName): Source
+    {
+        $templateSource = $this->getSource($templateName);
+
+        return new \Twig_Source($templateSource, $templateName);
+    }
+
+    public function getSource($templateName): string
+    {
+        $source = $this->getValue('source', $templateName);
+        if (!is_string($source) || mb_strlen($source) < 1) {
+            throw new \Twig_Error_Loader(sprintf('Template "%s" does not exist.', $templateName));
+        }
+
+        return $source;
+    }
+
+    public function isFresh($templateName, $time): bool
+    {
+        $lastModified = $this->getValue('lastModified', $templateName);
+        if (null === $lastModified) {
             return false;
         }
 
@@ -43,25 +79,22 @@ class DatabaseTwigLoader implements \Twig_LoaderInterface
     }
 
     /**
-     * @return string|null
+     * @return null|mixed
      */
-    private function getValue(string $column, string $templateName)
+    private function getValue(string $coloumn, string $templateName)
     {
-        $value = null;
-
         try {
-            $value = $this->entityManager
+            return $this->entityManager
                 ->getRepository($this->entity)
                 ->createQueryBuilder('t')
-                ->select('t.'.$column)
+                ->select(sprintf('t.%s', $coloumn))
                 ->where('t.name = :name')
                 ->setMaxResults(1)
                 ->getQuery()
                 ->setParameter('name', $templateName)
                 ->getSingleScalarResult();
         } catch (NoResultException $e) {
+            return null;
         }
-
-        return $value;
     }
 }

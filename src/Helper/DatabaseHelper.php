@@ -19,14 +19,14 @@ class DatabaseHelper
         $this->migrationsDir = $migrationsDir;
     }
 
-    public function cleanDatabase()
+    public function cleanDatabase(): void
     {
         $this->dropDatabase();
         $this->createDatabase();
         $this->runMigrations();
     }
 
-    private function createDatabase()
+    private function createDatabase(): void
     {
         try {
             $this->connection->getSchemaManager()->createDatabase($this->connection->getDatabase());
@@ -35,7 +35,7 @@ class DatabaseHelper
         }
     }
 
-    private function dropDatabase()
+    private function dropDatabase(): void
     {
         $this->connection->getSchemaManager()->dropDatabase($this->connection->getDatabase());
     }
@@ -43,7 +43,7 @@ class DatabaseHelper
     /**
      * Runs the command doctrine:migrations:migrate
      */
-    private function runMigrations()
+    private function runMigrations(): void
     {
         try {
             $this->connection->executeQuery(sprintf('USE %s', $this->connection->getDatabase()));

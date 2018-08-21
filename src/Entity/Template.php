@@ -22,7 +22,7 @@ class Template
     protected $source;
 
     /**
-     * @var array
+     * @var string[]|null
      */
     protected $services;
 
@@ -61,9 +61,9 @@ class Template
     }
 
     /**
-     * @param array|null $services
+     * @param string[]|null $services
      */
-    public function setServices($services): self
+    public function setServices(?array $services): self
     {
         $this->services = $services;
 
@@ -71,9 +71,9 @@ class Template
     }
 
     /**
-     * @return array|null
+     * @return string[]|null
      */
-    public function getServices()
+    public function getServices(): ?array
     {
         return $this->services;
     }
@@ -90,7 +90,7 @@ class Template
         return $this->lastModified;
     }
 
-    public function setLastModifiedToCurrentMoment()
+    public function setLastModifiedToCurrentMoment(): void
     {
         $this->lastModified = new \DateTimeImmutable();
     }

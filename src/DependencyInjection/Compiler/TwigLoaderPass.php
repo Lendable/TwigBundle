@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 
 class TwigLoaderPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $this->validateServices(
             $container,
@@ -35,7 +35,7 @@ class TwigLoaderPass implements CompilerPassInterface
         $twigDefinition->replaceArgument(0, $twigChainLoaderDefinition);
     }
 
-    private function validateServices(ContainerBuilder $container, array $services)
+    private function validateServices(ContainerBuilder $container, array $services): void
     {
         foreach ($services as $service) {
             if (false === $container->hasDefinition($service)) {

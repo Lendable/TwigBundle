@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class AlphaTwigBundle extends Bundle
 {
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
         parent::build($container);
 
@@ -20,7 +20,7 @@ class AlphaTwigBundle extends Bundle
         $this->addRegisterMappingsPass($container);
     }
 
-    private function addRegisterMappingsPass(ContainerBuilder $container)
+    private function addRegisterMappingsPass(ContainerBuilder $container): void
     {
         if (!$container->hasParameter('alpha_twig.entity.template.mapping_dir')) {
             $mappingDir = realpath(__DIR__.'/Resources/config/doctrine');
