@@ -6,7 +6,6 @@ namespace Alpha\TwigBundle\Loader;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
-use Twig\Source;
 
 class DatabaseTwigLoader implements \Twig_LoaderInterface, \Twig_SourceContextLoaderInterface
 {
@@ -51,7 +50,7 @@ class DatabaseTwigLoader implements \Twig_LoaderInterface, \Twig_SourceContextLo
         }
     }
 
-    public function getSourceContext($templateName): Source
+    public function getSourceContext($templateName): \Twig_Source
     {
         $templateSource = $this->getSource($templateName);
 
