@@ -54,7 +54,7 @@ install:
     fi
   - if [ "$TWIG_VERSION" != "" ]; then
       composer remove twig/twig &&
-      composer require twig/twig:"${$TWIG_VERSION}" --no-update;
+      composer require twig/twig:"${TWIG_VERSION}" --no-update;
     fi
   - if [ "$DEPENDENCIES" = "beta" ]; then
       composer config minimum-stability beta;
