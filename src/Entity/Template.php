@@ -61,7 +61,7 @@ class Template
     /**
      * @return string|null
      */
-    public function getSource(): string
+    public function getSource()
     {
         return $this->source;
     }
