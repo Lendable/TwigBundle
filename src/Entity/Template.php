@@ -43,7 +43,10 @@ class Template
         return $this;
     }
 
-    public function getName(): string
+    /**
+     * @return string|null
+     */
+    public function getName()
     {
         return $this->name;
     }
@@ -55,6 +58,9 @@ class Template
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getSource(): string
     {
         return $this->source;
@@ -85,7 +91,10 @@ class Template
         return $this;
     }
 
-    public function getLastModified(): \DateTimeInterface
+    /**
+     * @return \DateTimeInterface|null
+     */
+    public function getLastModified()
     {
         return $this->lastModified;
     }
