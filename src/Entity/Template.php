@@ -22,11 +22,6 @@ class Template
     protected $source;
 
     /**
-     * @var string[]|null
-     */
-    protected $services;
-
-    /**
      * @var \DateTimeInterface
      */
     protected $lastModified;
@@ -43,10 +38,7 @@ class Template
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -58,30 +50,9 @@ class Template
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getSource()
+    public function getSource(): ?string
     {
         return $this->source;
-    }
-
-    /**
-     * @param string[]|null $services
-     */
-    public function setServices(?array $services): self
-    {
-        $this->services = $services;
-
-        return $this;
-    }
-
-    /**
-     * @return string[]|null
-     */
-    public function getServices(): ?array
-    {
-        return $this->services;
     }
 
     public function setLastModified(\DateTimeInterface $lastModified): self
@@ -91,10 +62,7 @@ class Template
         return $this;
     }
 
-    /**
-     * @return \DateTimeInterface|null
-     */
-    public function getLastModified()
+    public function getLastModified(): ?\DateTimeInterface
     {
         return $this->lastModified;
     }
