@@ -22,7 +22,7 @@ class Template
     protected $source;
 
     /**
-     * @var \DateTimeInterface
+     * @var \DateTimeImmutable
      */
     protected $lastModified;
 
@@ -64,9 +64,7 @@ class Template
 
     public function getLastModified(): ?\DateTimeImmutable
     {
-        return $this->lastModified instanceof \DateTime
-            ? \DateTimeImmutable::createFromMutable($this->lastModified)
-            : $this->lastModified;
+        return $this->lastModified;
     }
 
     public function setLastModifiedToCurrentMoment(): void

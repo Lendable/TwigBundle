@@ -14,7 +14,7 @@ Alpha\TwigBundle\Entity\Template:
     source:
       type: text
     lastModified:
-      type: datetime
+      type: datetime_immutable
   lifecycleCallbacks:
     prePersist: [ setLastModifiedToCurrentMoment ]
     preUpdate: [ setLastModifiedToCurrentMoment ]
