@@ -83,13 +83,13 @@ class DatabaseTwigLoader implements LoaderInterface
     /**
      * @return null|mixed
      */
-    private function getValue(string $coloumn, string $templateName)
+    private function getValue(string $column, string $templateName)
     {
         try {
             return $this->entityManager
                 ->getRepository($this->entity)
                 ->createQueryBuilder('t')
-                ->select(sprintf('t.%s', $coloumn))
+                ->select(sprintf('t.%s', $column))
                 ->where('t.name = :name')
                 ->setMaxResults(1)
                 ->getQuery()
