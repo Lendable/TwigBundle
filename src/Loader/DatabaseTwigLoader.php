@@ -55,19 +55,12 @@ class DatabaseTwigLoader implements LoaderInterface
 
     public function getSourceContext($templateName): Source
     {
-        $templateSource = $this->getSource($templateName);
-
-        return new Source($templateSource, $templateName);
-    }
-
-    public function getSource($templateName): string
-    {
-        $source = $this->getValue('source', $templateName);
-        if (!is_string($source) || mb_strlen($source) < 1) {
+        $templateSource = $this->getValue('source', $templateName);
+        if (!is_string($templateSource) || mb_strlen($templateSource) < 1) {
             throw new LoaderError(sprintf('Template "%s" does not exist.', $templateName));
         }
 
-        return $source;
+        return new Source($templateSource, $templateName);
     }
 
     public function isFresh($templateName, $time): bool
