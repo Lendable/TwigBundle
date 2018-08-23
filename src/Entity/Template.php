@@ -55,16 +55,18 @@ class Template
         return $this->source;
     }
 
-    public function setLastModified(\DateTimeInterface $lastModified): self
+    public function setLastModified(\DateTimeImmutable $lastModified): self
     {
         $this->lastModified = $lastModified;
 
         return $this;
     }
 
-    public function getLastModified(): ?\DateTimeInterface
+    public function getLastModified(): ?\DateTimeImmutable
     {
-        return $this->lastModified;
+        return $this->lastModified instanceof \DateTime
+            ? \DateTimeImmutable::createFromMutable($this->lastModified)
+            : $this->lastModified;
     }
 
     public function setLastModifiedToCurrentMoment(): void
