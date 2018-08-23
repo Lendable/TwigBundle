@@ -15,6 +15,9 @@ env:
   global:
     - MAINTAINED_SYMFONY_VERSIONS="2.8.*|3.4.*|4.1.*"
   matrix:
+    - TWIG_VERSION="2.0.*"
+    - TWIG_VERSION="2.1.*"
+    - TWIG_VERSION="2.2.*"
     - TWIG_VERSION="2.3.*"
     - TWIG_VERSION="2.4.*"
     - TWIG_VERSION="2.5.*"
