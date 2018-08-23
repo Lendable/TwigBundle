@@ -5,15 +5,13 @@ declare(strict_types=1);
 namespace Alpha\TwigBundle\Extension;
 
 use Symfony\Component\Yaml\Dumper;
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFilter;
 
-class YamlDumpExtension extends AbstractExtension
+class YamlDumpExtension extends \Twig_Extension
 {
     public function getFilters(): array
     {
         return [
-            new TwigFilter('yaml_dump', [$this, 'yamlDump']),
+            new \Twig_SimpleFilter('yaml_dump', [$this, 'yamlDump']),
         ];
     }
 

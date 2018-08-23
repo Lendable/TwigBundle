@@ -6,11 +6,8 @@ namespace Alpha\TwigBundle\Loader;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
-use Twig\Error\LoaderError;
-use Twig\Loader\LoaderInterface;
-use Twig\Source;
 
-class DatabaseTwigLoader implements LoaderInterface
+class DatabaseTwigLoader implements \Twig_LoaderInterface
 {
     protected $entityManager;
     protected $entity;
@@ -53,14 +50,14 @@ class DatabaseTwigLoader implements LoaderInterface
         }
     }
 
-    public function getSourceContext($templateName): Source
+    public function getSourceContext($templateName): \Twig_Source
     {
         $templateSource = $this->getValue('source', $templateName);
         if (!is_string($templateSource) || mb_strlen($templateSource) < 1) {
-            throw new LoaderError(sprintf('Template "%s" does not exist.', $templateName));
+            throw new \Twig_Error_Loader(sprintf('Template "%s" does not exist.', $templateName));
         }
 
-        return new Source($templateSource, $templateName);
+        return new \Twig_Source($templateSource, $templateName);
     }
 
     public function isFresh($templateName, $time): bool

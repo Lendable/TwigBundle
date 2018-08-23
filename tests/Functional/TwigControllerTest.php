@@ -9,8 +9,6 @@ use PHPUnit\Framework\TestCase;
 use Alpha\TwigBundle\Entity\Template;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Twig\Environment;
-use Twig\Error\LoaderError;
 
 class TwigControllerTest extends TestCase
 {
@@ -20,7 +18,7 @@ class TwigControllerTest extends TestCase
     private $kernel;
 
     /**
-     * @var Environment
+     * @var \Twig_Environment
      */
     private $twig;
 
@@ -39,7 +37,7 @@ class TwigControllerTest extends TestCase
         $this->entityManager = $entityManager;
 
         $twig = $this->kernel->getContainer()->get('twig');
-        assert($twig instanceof Environment);
+        assert($twig instanceof \Twig_Environment);
         $this->twig = $twig;
 
         $application = new \Symfony\Bundle\FrameworkBundle\Console\Application($this->kernel);
@@ -99,7 +97,7 @@ SQL
      */
     public function compiling_a_database_template_throws_exception_if_it_does_not_exist(): void
     {
-        $this->expectException(LoaderError::class);
+        $this->expectException(\Twig_Error_Loader::class);
 
         $this->twig->render('invalid.txt.twig', ['name' => 'World']);
     }
