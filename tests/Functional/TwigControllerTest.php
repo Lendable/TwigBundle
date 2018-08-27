@@ -83,7 +83,7 @@ SQL
         $template = new Template();
         $template->setName('hello.txt.twig');
         $template->setSource('Hello {{ name }}.');
-        $template->setLastModified(new \DateTime());
+        $template->setLastModified(new \DateTimeImmutable());
 
         $this->entityManager->persist($template);
         $this->entityManager->flush();
