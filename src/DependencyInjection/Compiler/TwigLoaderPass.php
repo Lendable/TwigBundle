@@ -12,35 +12,42 @@ class TwigLoaderPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        $this->validateServices(
-            $container,
-            [
-                'twig.loader.chain',
-                'twig',
-                'twig.loader.filesystem',
-                'alpha_twig.loader.database',
-            ]
-        );
+        $this->validateServices($container);
 
-        $twigChainLoaderDefinition = $container->getDefinition('twig.loader.chain');
-        $arguments = [
-            [
-                $container->getDefinition('twig.loader.filesystem'),
-                $container->getDefinition('alpha_twig.loader.database'),
-            ]
-        ];
-        $twigChainLoaderDefinition->setArguments($arguments);
+        $this->appendNewLoaderToTheExistingChain($container);
 
-        $twigDefinition = $container->getDefinition('twig');
-        $twigDefinition->replaceArgument(0, $twigChainLoaderDefinition);
+        $this->updateTwig($container);
     }
 
-    private function validateServices(ContainerBuilder $container, array $services): void
+    private function validateServices(ContainerBuilder $container): void
     {
-        foreach ($services as $service) {
+        foreach ([
+            'twig.loader.chain',
+            'twig',
+            'twig.loader.filesystem',
+            'alpha_twig.loader.database',
+        ] as $service) {
             if (false === $container->hasDefinition($service)) {
                 throw new ServiceNotFoundException(sprintf('The service %s does not exist.', $service));
             }
         }
+    }
+
+    private function appendNewLoaderToTheExistingChain(ContainerBuilder $container): void
+    {
+        $chainLoaderDefinition = $container->getDefinition('twig.loader.chain');
+        $existingChain = $chainLoaderDefinition->getArgument(0);
+        if (in_array('alpha_twig.loader.database', $existingChain)) {
+            return;
+        }
+        $existingChain[] = $container->getDefinition('alpha_twig.loader.database');
+        $chainLoaderDefinition->replaceArgument(0, $existingChain);
+    }
+
+    private function updateTwig(ContainerBuilder $container): void
+    {
+        $chainLoaderDefinition = $container->getDefinition('twig.loader.chain');
+        $twigDefinition = $container->getDefinition('twig');
+        $twigDefinition->replaceArgument(0, $chainLoaderDefinition);
     }
 }
