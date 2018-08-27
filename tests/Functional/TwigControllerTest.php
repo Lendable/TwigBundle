@@ -62,7 +62,6 @@ class TwigControllerTest extends TestCase
           `id` INTEGER PRIMARY KEY AUTOINCREMENT,
           `name` varchar(255) NOT NULL,
           `source` longtext NOT NULL,
-          `services` longtext,
           `lastModified` datetime NOT NULL
         )
 SQL
