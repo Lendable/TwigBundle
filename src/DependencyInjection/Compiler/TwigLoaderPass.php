@@ -47,10 +47,12 @@ class TwigLoaderPass implements CompilerPassInterface
             $chainLoaderDefinition->replaceArgument(0, $existingChain);
         } catch (OutOfBoundsException $exception) {
             $newChain = [
-                $container->getDefinition('twig.loader.filesystem'),
-                $container->getDefinition('alpha_twig.loader.database'),
+                [
+                    $container->getDefinition('twig.loader.filesystem'),
+                    $container->getDefinition('alpha_twig.loader.database'),
+                ],
             ];
-            $chainLoaderDefinition->setArgument(0, $newChain);
+            $chainLoaderDefinition->setArguments($newChain);
         }
     }
 
