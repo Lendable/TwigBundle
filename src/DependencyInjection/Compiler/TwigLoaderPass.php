@@ -36,12 +36,20 @@ class TwigLoaderPass implements CompilerPassInterface
     private function appendNewLoaderToTheExistingChain(ContainerBuilder $container): void
     {
         $chainLoaderDefinition = $container->getDefinition('twig.loader.chain');
-        $existingChain = $chainLoaderDefinition->getArgument(0);
-        if (in_array('alpha_twig.loader.database', $existingChain)) {
-            return;
+        try {
+            $existingChain = $chainLoaderDefinition->getArgument(0);
+            if (in_array('alpha_twig.loader.database', $existingChain)) {
+                return;
+            }
+            $existingChain[] = $container->getDefinition('alpha_twig.loader.database');
+            $chainLoaderDefinition->replaceArgument(0, $existingChain);
+        } catch (\OutOfBoundsException $exception) {
+            $newChain = [
+                $container->getDefinition('twig.loader.filesystem'),
+                $container->getDefinition('alpha_twig.loader.database'),
+            ];
+            $chainLoaderDefinition->setArgument(0, $newChain);
         }
-        $existingChain[] = $container->getDefinition('alpha_twig.loader.database');
-        $chainLoaderDefinition->replaceArgument(0, $existingChain);
     }
 
     private function updateTwig(ContainerBuilder $container): void
