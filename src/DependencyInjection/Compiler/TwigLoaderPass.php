@@ -7,6 +7,7 @@ namespace Alpha\TwigBundle\DependencyInjection\Compiler;
 use Alpha\TwigBundle\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Exception\OutOfBoundsException;
 
 class TwigLoaderPass implements CompilerPassInterface
 {
@@ -36,6 +37,7 @@ class TwigLoaderPass implements CompilerPassInterface
     private function appendNewLoaderToTheExistingChain(ContainerBuilder $container): void
     {
         $chainLoaderDefinition = $container->getDefinition('twig.loader.chain');
+
         try {
             $existingChain = $chainLoaderDefinition->getArgument(0);
             if (in_array('alpha_twig.loader.database', $existingChain)) {
@@ -43,7 +45,7 @@ class TwigLoaderPass implements CompilerPassInterface
             }
             $existingChain[] = $container->getDefinition('alpha_twig.loader.database');
             $chainLoaderDefinition->replaceArgument(0, $existingChain);
-        } catch (\OutOfBoundsException $exception) {
+        } catch (OutOfBoundsException $exception) {
             $newChain = [
                 $container->getDefinition('twig.loader.filesystem'),
                 $container->getDefinition('alpha_twig.loader.database'),
