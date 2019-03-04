@@ -25,29 +25,29 @@ class DatabaseTwigLoader implements \Twig_LoaderInterface
 
     public function exists($templateName): bool
     {
-        $template = $this->findTemplate($templateName);
+        try {
+            $template = $this->findTemplate($templateName);
 
-        return $template instanceof $this->entity;
+            return $template instanceof $this->entity;
+        } catch (NoResultException $e) {
+            return false;
+        }
     }
 
     /**
-     * @return null|object
+     * @return object
      */
     private function findTemplate(string $templateName)
     {
-        try {
-            return $this->entityManager
-                ->getRepository($this->entity)
-                ->createQueryBuilder('t')
-                ->select('t')
-                ->where('t.name = :name')
-                ->setMaxResults(1)
-                ->getQuery()
-                ->setParameter('name', $templateName)
-                ->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $this->entityManager
+            ->getRepository($this->entity)
+            ->createQueryBuilder('t')
+            ->select('t')
+            ->where('t.name = :name')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->setParameter('name', $templateName)
+            ->getSingleResult();
     }
 
     public function getSourceContext($templateName): \Twig_Source
@@ -62,31 +62,31 @@ class DatabaseTwigLoader implements \Twig_LoaderInterface
 
     public function isFresh($templateName, $time): bool
     {
-        $lastModified = $this->getValue('lastModified', $templateName);
-        if (null === $lastModified) {
+        try {
+            $lastModified = $this->getValue('lastModified', $templateName);
+            if (null === $lastModified) {
+                return false;
+            }
+
+            return strtotime($lastModified) <= $time;
+        } catch (NoResultException $e) {
             return false;
         }
-
-        return strtotime($lastModified) <= $time;
     }
 
     /**
-     * @return null|mixed
+     * @return mixed
      */
     private function getValue(string $column, string $templateName)
     {
-        try {
-            return $this->entityManager
-                ->getRepository($this->entity)
-                ->createQueryBuilder('t')
-                ->select(sprintf('t.%s', $column))
-                ->where('t.name = :name')
-                ->setMaxResults(1)
-                ->getQuery()
-                ->setParameter('name', $templateName)
-                ->getSingleScalarResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $this->entityManager
+            ->getRepository($this->entity)
+            ->createQueryBuilder('t')
+            ->select(sprintf('t.%s', $column))
+            ->where('t.name = :name')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->setParameter('name', $templateName)
+            ->getSingleScalarResult();
     }
 }
