@@ -9,11 +9,13 @@ cache:
 php:
   - 7.1.18
   - 7.2
+  - 7.3
   - nightly
 
 env:
   global:
     - MAINTAINED_SYMFONY_VERSIONS="3.4.*|4.2.*"
+    - LATEST_PHP_VERSION="7.3"
   matrix:
     - TWIG_VERSION="2.0.*"
     - TWIG_VERSION="2.1.*"
