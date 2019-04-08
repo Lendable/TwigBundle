@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Alpha\TwigBundle\Entity\Template;
 use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class TwigControllerTest extends TestCase
@@ -32,11 +33,14 @@ class TwigControllerTest extends TestCase
         $this->kernel = new \AppKernel('test', false);
         $this->kernel->boot();
 
-        $entityManager = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
+        $container = $this->kernel->getContainer();
+        assert($container instanceof ContainerInterface);
+
+        $entityManager = $container->get('doctrine.orm.entity_manager');
         assert($entityManager instanceof EntityManagerInterface);
         $this->entityManager = $entityManager;
 
-        $twig = $this->kernel->getContainer()->get('twig');
+        $twig = $container->get('twig');
         assert($twig instanceof \Twig_Environment);
         $this->twig = $twig;
 
