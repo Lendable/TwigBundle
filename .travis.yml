@@ -38,31 +38,6 @@ env:
     - DEPENDENCIES="beta"
     - DEPENDENCIES="low"
     - DEPENDENCIES="stable"
-  exclude:
-    - php: 7.0
-      env: "TWIG_VERSION=2.4.* SYMFONY_VERSION=4.0.*"
-    - php: 7.0
-      env: "TWIG_VERSION=2.5.* SYMFONY_VERSION=4.0.*"
-    - php: 7.0
-      env: "TWIG_VERSION=2.6.* SYMFONY_VERSION=4.0.*"
-    - php: 7.0
-      env: "TWIG_VERSION=2.7.* SYMFONY_VERSION=4.0.*"
-    - php: 7.0
-      env: "TWIG_VERSION=2.4.* SYMFONY_VERSION=4.1.*"
-    - php: 7.0
-      env: "TWIG_VERSION=2.5.* SYMFONY_VERSION=4.1.*"
-    - php: 7.0
-      env: "TWIG_VERSION=2.6.* SYMFONY_VERSION=4.1.*"
-    - php: 7.0
-      env: "TWIG_VERSION=2.7.* SYMFONY_VERSION=4.1.*"
-    - php: 7.0
-      env: "TWIG_VERSION=2.4.* SYMFONY_VERSION=4.2.*"
-    - php: 7.0
-      env: "TWIG_VERSION=2.5.* SYMFONY_VERSION=4.2.*"
-    - php: 7.0
-      env: "TWIG_VERSION=2.6.* SYMFONY_VERSION=4.2.*"
-    - php: 7.0
-      env: "TWIG_VERSION=2.7.* SYMFONY_VERSION=4.2.*"
 
 matrix:
   fast_finish: true
