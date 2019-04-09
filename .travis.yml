@@ -55,14 +55,12 @@ before_install:
 
 install:
   - if [ "$(phpenv version-name)" != "$LATEST_PHP_VERSION" ]; then
-      composer remove friendsofphp/php-cs-fixer phpstan/phpstan phpstan/phpstan-phpunit --dev;
+      composer remove friendsofphp/php-cs-fixer phpstan/phpstan phpstan/phpstan-phpunit --dev --no-update;
     fi
-  - if [ "$SYMFONY_VERSION" != "" ]; then
-      composer remove symfony/symfony --dev &&
+  - if [ "$SYMFONY_VERSION" != "" && "$TWIG_VERSION" != "" ]; then
+      composer remove symfony/symfony --dev --no-update &&
       composer require symfony/symfony:"${SYMFONY_VERSION}" --dev --no-update;
-    fi
-  - if [ "$TWIG_VERSION" != "" ]; then
-      composer remove twig/twig &&
+      composer remove twig/twig --no-update &&
       composer require twig/twig:"${TWIG_VERSION}" --no-update;
     fi
   - if [ "$DEPENDENCIES" = "beta" ]; then
@@ -73,6 +71,7 @@ install:
     else
       composer update -n --prefer-dist;
     fi;
+  - composer install --dev -o --prefer-dist
 
 script:
   - if [ "$(phpenv version-name)" != "$LATEST_PHP_VERSION" ]; then
