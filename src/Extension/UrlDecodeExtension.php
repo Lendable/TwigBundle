@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Alpha\TwigBundle\Extension;
 
-class UrlDecodeExtension extends \Twig_Extension
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+
+class UrlDecodeExtension extends AbstractExtension
 {
     public function getFilters(): array
     {
         return [
-            new \Twig_SimpleFilter('url_decode', [$this, 'urlDecode']),
+            new TwigFilter('url_decode', [$this, 'urlDecode']),
         ];
     }
 
