@@ -22,22 +22,22 @@ class AlphaTwigBundle extends Bundle
     private function addRegisterMappingsPass(ContainerBuilder $container): void
     {
         $mappings = [
-            $this->deriveMappingDir($container) => $this->deriveMappingNamespace($container),
+            $this->resolveMappingDir($container) => $this->resolveMappingNamespace($container),
         ];
 
         $container->addCompilerPass(DoctrineOrmMappingsPass::createYamlMappingDriver($mappings));
     }
 
-    private function deriveMappingDir(ContainerBuilder $container): string
+    private function resolveMappingDir(ContainerBuilder $container): string
     {
         if ($container->hasParameter(self::PARAM_TEMPLATE_MAPPING_DIR)) {
             return $container->getParameter(self::PARAM_TEMPLATE_MAPPING_DIR);
         }
 
-        return realpath(__DIR__.'/Resources/config/doctrine');
+        return (string) realpath(__DIR__.'/Resources/config/doctrine');
     }
 
-    private function deriveMappingNamespace(ContainerBuilder $container): string
+    private function resolveMappingNamespace(ContainerBuilder $container): string
     {
         if ($container->hasParameter(self::PARAM_TEMPLATE_MAPPING_NAMESPACE)) {
             $namespace = preg_replace(
@@ -46,7 +46,7 @@ class AlphaTwigBundle extends Bundle
                 $container->getParameter(self::PARAM_TEMPLATE_MAPPING_NAMESPACE)
             );
 
-            return $namespace ?: '\\';
+            return is_string($namespace) && !empty($namespace) ? $namespace : '\\';
         }
 
         return self::DEFAULT_TEMPLATE_MAPPING_NAMESPACE;
