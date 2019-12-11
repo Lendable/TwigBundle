@@ -38,9 +38,9 @@
     "doctrine/migrations": "*",
     "doctrine/orm": "*",
     "sonata-project/admin-bundle": "^3.0",
-    "symfony/framework-bundle": "^2.7|^3.0|^4.0",
-    "symfony/symfony": "^2.7|^3.0|^4.0",
-    "symfony/twig-bundle": "^2.7|^3.0|^4.0",
+    "symfony/framework-bundle": "^3.4.26|^4.3|^5.0",
+    "symfony/symfony": "^3.4.35|^4.3|^5.0",
+    "symfony/twig-bundle": "^3.4|^4.3|^5.0",
     "twig/twig": "^2.0"
   },
   "require-dev": {
