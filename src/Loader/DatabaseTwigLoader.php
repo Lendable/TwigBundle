@@ -29,7 +29,7 @@ class DatabaseTwigLoader implements LoaderInterface
     public function exists($templateName): bool
     {
         try {
-            $template = $this->findTemplate($templateName);
+            $template = $this->getTemplate($templateName);
 
             return $template instanceof $this->entity;
         } catch (NoResultException $e) {
@@ -37,10 +37,7 @@ class DatabaseTwigLoader implements LoaderInterface
         }
     }
 
-    /**
-     * @return object
-     */
-    private function findTemplate(string $templateName)
+    private function getTemplate(string $templateName): object
     {
         return $this->entityManager
             ->getRepository($this->entity)
