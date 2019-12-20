@@ -34,7 +34,12 @@ class AlphaTwigBundle extends Bundle
             return $container->getParameter(self::PARAM_TEMPLATE_MAPPING_DIR);
         }
 
-        return (string) realpath(__DIR__.'/Resources/config/doctrine');
+        $realpath = realpath(__DIR__.'/Resources/config/doctrine');
+        if ($realpath === false) {
+            throw new \RuntimeException('Cannot resolve the location of the mapping directory');
+        }
+
+        return $realpath;
     }
 
     private function resolveMappingNamespace(ContainerBuilder $container): string
