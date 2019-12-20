@@ -7,9 +7,9 @@ cache:
     - $HOME/.composer/cache
 
 php:
-  - 7.1.18
   - 7.2
   - 7.3
+  - 7.4
   - nightly
 
 env:
@@ -17,19 +17,30 @@ env:
     - MAINTAINED_SYMFONY_VERSIONS="3.4.*|4.4.*"
     - LATEST_PHP_VERSION="7.4"
   matrix:
-    - "TWIG_VERSION=2.4.* SYMFONY_VERSION=3.4.*"
     - "TWIG_VERSION=2.5.* SYMFONY_VERSION=3.4.*"
     - "TWIG_VERSION=2.6.* SYMFONY_VERSION=3.4.*"
     - "TWIG_VERSION=2.7.* SYMFONY_VERSION=3.4.*"
-    - "TWIG_VERSION=2.4.* SYMFONY_VERSION=4.3.*"
+    - "TWIG_VERSION=2.8.* SYMFONY_VERSION=3.4.*"
+    - "TWIG_VERSION=2.9.* SYMFONY_VERSION=3.4.*"
+    - "TWIG_VERSION=2.10.* SYMFONY_VERSION=3.4.*"
+    - "TWIG_VERSION=2.11.* SYMFONY_VERSION=3.4.*"
+    - "TWIG_VERSION=2.12.* SYMFONY_VERSION=3.4.*"
     - "TWIG_VERSION=2.5.* SYMFONY_VERSION=4.3.*"
     - "TWIG_VERSION=2.6.* SYMFONY_VERSION=4.3.*"
     - "TWIG_VERSION=2.7.* SYMFONY_VERSION=4.3.*"
-    - "TWIG_VERSION=2.4.* SYMFONY_VERSION=4.4.*"
+    - "TWIG_VERSION=2.8.* SYMFONY_VERSION=4.3.*"
+    - "TWIG_VERSION=2.9.* SYMFONY_VERSION=4.3.*"
+    - "TWIG_VERSION=2.10.* SYMFONY_VERSION=4.3.*"
+    - "TWIG_VERSION=2.11.* SYMFONY_VERSION=4.3.*"
+    - "TWIG_VERSION=2.12.* SYMFONY_VERSION=4.3.*"
     - "TWIG_VERSION=2.5.* SYMFONY_VERSION=4.4.*"
     - "TWIG_VERSION=2.6.* SYMFONY_VERSION=4.4.*"
     - "TWIG_VERSION=2.7.* SYMFONY_VERSION=4.4.*"
-    - DEPENDENCIES="beta"
+    - "TWIG_VERSION=2.8.* SYMFONY_VERSION=4.4.*"
+    - "TWIG_VERSION=2.9.* SYMFONY_VERSION=4.4.*"
+    - "TWIG_VERSION=2.10.* SYMFONY_VERSION=4.4.*"
+    - "TWIG_VERSION=2.11.* SYMFONY_VERSION=4.4.*"
+    - "TWIG_VERSION=2.12.* SYMFONY_VERSION=4.4.*"
     - DEPENDENCIES="low"
     - DEPENDENCIES="stable"
 
@@ -37,7 +48,6 @@ matrix:
   fast_finish: true
   allow_failures:
     - php: nightly
-    - env: DEPENDENCIES="beta"
     - env: DEPENDENCIES="low"
 
 before_install:
@@ -57,10 +67,7 @@ install:
       composer remove twig/twig --no-update &&
       composer require twig/twig:"${TWIG_VERSION}" --no-update;
     fi
-  - if [ "$DEPENDENCIES" = "beta" ]; then
-      composer config minimum-stability beta;
-      composer update -n --prefer-dist;
-    elif [ "$DEPENDENCIES" = "low" ]; then
+  - if [ "$DEPENDENCIES" = "low" ]; then
       composer update -n --prefer-dist --prefer-lowest;
     else
       composer update -n --prefer-dist;
