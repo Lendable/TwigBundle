@@ -10,7 +10,7 @@ TwigBundle
 Symfony bundle that allows Twig templates to be loaded from database store.
 
 Install
-===
+=======
 
 `composer require lendable/twig-bundle`
 
@@ -46,5 +46,5 @@ parameters:
 ```
 
 License
-===
+=======
 [MIT](https://opensource.org/licenses/MIT)
