@@ -5,7 +5,7 @@
 [![Total Downloads](https://poser.pugx.org/lendable/twig-bundle/downloads)](https://packagist.org/packages/lendable/twig-bundle)
 
 TwigBundle
-===
+==========
 
 Symfony bundle that allows Twig templates to be loaded from database store.
 
