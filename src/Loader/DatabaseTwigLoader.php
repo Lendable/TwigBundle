@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Alpha\TwigBundle\Loader;
 
+use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
 use Twig\Error\LoaderError;
@@ -32,7 +33,7 @@ class DatabaseTwigLoader implements LoaderInterface
             $template = $this->getTemplate($templateName);
 
             return $template instanceof $this->entity;
-        } catch (NoResultException $e) {
+        } catch (NoResultException | TableNotFoundException $exception) {
             return false;
         }
     }
@@ -69,7 +70,7 @@ class DatabaseTwigLoader implements LoaderInterface
             }
 
             return strtotime($lastModified) <= $time;
-        } catch (NoResultException $e) {
+        } catch (NoResultException $exception) {
             return false;
         }
     }
