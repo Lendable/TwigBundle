@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class TemplateAdmin extends AbstractAdmin
 {
-    protected function configureFormFields(FormMapper $form)
+    protected function configureFormFields(FormMapper $form): void
     {
         $form
             ->add('name', 'text', [
@@ -31,14 +31,14 @@ class TemplateAdmin extends AbstractAdmin
             ]);
     }
 
-    protected function configureDatagridFilters(DatagridMapper $filter)
+    protected function configureDatagridFilters(DatagridMapper $filter): void
     {
         $filter
             ->add('name')
             ->add('source');
     }
 
-    protected function configureListFields(ListMapper $list)
+    protected function configureListFields(ListMapper $list): void
     {
         $list
             ->addIdentifier('name')
@@ -46,13 +46,13 @@ class TemplateAdmin extends AbstractAdmin
             ->add('lastModified');
     }
 
-    public function prePersist($object)
+    public function prePersist($object): void
     {
         assert($object instanceof Template);
         $object->setLastModifiedToCurrentMoment();
     }
 
-    public function preUpdate($object)
+    public function preUpdate($object): void
     {
         assert($object instanceof Template);
         $object->setLastModifiedToCurrentMoment();

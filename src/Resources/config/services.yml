@@ -10,6 +10,8 @@ services:
         arguments:
             - "@doctrine.orm.default_entity_manager"
             - "%alpha_twig.entity.template.class%"
+        tags:
+            - { name: 'twig.loader' }
 
     alpha_twig.admin.template:
         public: true
@@ -28,6 +30,7 @@ services:
         class: Alpha\TwigBundle\Extension\UrlDecodeExtension
         tags:
             - { name: twig.extension }
+
     alpha.twig.extension.yaml_dump:
         public: true
         class: Alpha\TwigBundle\Extension\YamlDumpExtension

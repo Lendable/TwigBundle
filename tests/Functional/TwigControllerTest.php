@@ -8,7 +8,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Alpha\TwigBundle\Entity\Template;
 use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Twig\Environment;
+use Twig\Error\LoaderError;
 
 class TwigControllerTest extends TestCase
 {
@@ -18,7 +21,7 @@ class TwigControllerTest extends TestCase
     private $kernel;
 
     /**
-     * @var \Twig_Environment
+     * @var Environment
      */
     private $twig;
 
@@ -27,14 +30,21 @@ class TwigControllerTest extends TestCase
      */
     private $entityManager;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->kernel = new \AppKernel('test', false);
         $this->kernel->boot();
 
-        $this->entityManager = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
+        $container = $this->kernel->getContainer();
+        assert($container instanceof ContainerInterface);
 
-        $this->twig = $this->kernel->getContainer()->get('twig');
+        $entityManager = $container->get('doctrine.orm.entity_manager');
+        assert($entityManager instanceof EntityManagerInterface);
+        $this->entityManager = $entityManager;
+
+        $twig = $container->get('twig');
+        assert($twig instanceof Environment);
+        $this->twig = $twig;
 
         $application = new \Symfony\Bundle\FrameworkBundle\Console\Application($this->kernel);
         $application->setAutoExit(false);
@@ -58,14 +68,13 @@ class TwigControllerTest extends TestCase
           `id` INTEGER PRIMARY KEY AUTOINCREMENT,
           `name` varchar(255) NOT NULL,
           `source` longtext NOT NULL,
-          `services` longtext,
           `lastModified` datetime NOT NULL
         )
 SQL
         ]), new NullOutput());
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->kernel->shutdown();
     }
@@ -74,12 +83,12 @@ SQL
      * @test
      * @group database
      */
-    public function compiling_a_database_template_succeeds_if_it_exists()
+    public function compiling_a_database_template_succeeds_if_it_exists(): void
     {
         $template = new Template();
         $template->setName('hello.txt.twig');
         $template->setSource('Hello {{ name }}.');
-        $template->setLastModified(new \DateTime());
+        $template->setLastModified(new \DateTimeImmutable());
 
         $this->entityManager->persist($template);
         $this->entityManager->flush();
@@ -91,9 +100,9 @@ SQL
      * @test
      * @group database
      */
-    public function compiling_a_database_template_throws_exception_if_it_does_not_exist()
+    public function compiling_a_database_template_throws_exception_if_it_does_not_exist(): void
     {
-        $this->expectException(\Twig_Error_Loader::class);
+        $this->expectException(LoaderError::class);
 
         $this->twig->render('invalid.txt.twig', ['name' => 'World']);
     }
@@ -102,7 +111,7 @@ SQL
      * @test
      * @group database
      */
-    public function compiling_a_file_succeeds()
+    public function compiling_a_file_succeeds(): void
     {
         $output = $this->twig->render('AlphaTwigBundle:Test:hello.txt.twig', ['name' => 'File']);
 
@@ -113,7 +122,7 @@ SQL
      * @test
      * @group database
      */
-    public function file_takes_precedence_over_database()
+    public function file_takes_precedence_over_database(): void
     {
         $template = new Template();
         $template->setName('AlphaTwigBundle:Test:hello.txt.twig');

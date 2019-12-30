@@ -13,11 +13,8 @@ Alpha\TwigBundle\Entity\Template:
       length: 255
     source:
       type: text
-    services:
-      type: array
-      nullable: true
     lastModified:
-      type: datetime
+      type: datetime_immutable
   lifecycleCallbacks:
     prePersist: [ setLastModifiedToCurrentMoment ]
     preUpdate: [ setLastModifiedToCurrentMoment ]
